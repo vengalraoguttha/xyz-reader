@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -122,10 +124,15 @@ public class ArticleListActivity extends ActionBarActivity implements
         Adapter adapter = new Adapter(cursor,this);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(sglm);
+        int columns;
+        if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
+            columns=2;
+        }else{
+            columns=3;
+        }
+
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(this,columns);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
     }
 
     @Override
@@ -159,10 +166,13 @@ public class ArticleListActivity extends ActionBarActivity implements
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         View img = view.findViewById(R.id.thumbnail);
                         if(img !=  null && img instanceof ImageView) {
-                            img.setTransitionName("sharedElement1");
-                            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(((Activity) mContext), img, "sharedElement1");
+                            //***** if you uncomment below lines and run then it is giving error for shared element transition but unable to solve it.
+//                            img.setTransitionName("sharedElement1");
+//                            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(((Activity) mContext), img, "sharedElement1");
+//                            startActivity(new Intent(Intent.ACTION_VIEW,
+//                                    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))), options.toBundle());
                             startActivity(new Intent(Intent.ACTION_VIEW,
-                                    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))), options.toBundle());
+                                    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
                         }
                     }
                     else

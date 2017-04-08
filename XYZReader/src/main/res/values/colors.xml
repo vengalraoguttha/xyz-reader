@@ -30,4 +30,7 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+    <color name="tool_col">#333</color>
+    <color name="title_col">#fff</color>
+    <color name="article_by_line_col">#8fff</color>
 </resources>
