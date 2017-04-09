@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -46,7 +47,7 @@ import java.util.GregorianCalendar;
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
-public class ArticleListActivity extends ActionBarActivity implements
+public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ArticleListActivity.class.toString();
@@ -131,8 +132,9 @@ public class ArticleListActivity extends ActionBarActivity implements
             columns=3;
         }
 
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(this,columns);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(sglm);
     }
 
     @Override
@@ -166,13 +168,10 @@ public class ArticleListActivity extends ActionBarActivity implements
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         View img = view.findViewById(R.id.thumbnail);
                         if(img !=  null && img instanceof ImageView) {
-                            //***** if you uncomment below lines and run then it is giving error for shared element transition but unable to solve it.
-//                            img.setTransitionName("sharedElement1");
-//                            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(((Activity) mContext), img, "sharedElement1");
-//                            startActivity(new Intent(Intent.ACTION_VIEW,
-//                                    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))), options.toBundle());
+                            img.setTransitionName("sharedElement1");
+                            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(((Activity) mContext), img, "sharedElement1");
                             startActivity(new Intent(Intent.ACTION_VIEW,
-                                    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                                    ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))), options.toBundle());
                         }
                     }
                     else
